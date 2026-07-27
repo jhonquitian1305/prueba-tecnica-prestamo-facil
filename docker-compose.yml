@@ -1,0 +1,25 @@
+services:
+  db:
+    container_name: ${NAME_DB}
+    image: postgres:18.4-alpine
+    restart: always
+    ports:
+      - "${PORT_DB}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${NAME_DB}
+    volumes:
+      - data_users:/var/lib/postgresql
+
+  pgAdmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:9.16
+    ports:
+      - "${PGADMIN_PORT}:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+
+volumes:
+  data_users:
