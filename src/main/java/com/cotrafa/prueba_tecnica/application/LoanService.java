@@ -1,5 +1,7 @@
 package com.cotrafa.prueba_tecnica.application;
 
+import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
+import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
 import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.LoanStateEnum;
@@ -42,5 +44,10 @@ public class LoanService implements ILoanService {
         loan.setIdState(idState);
 
         return loanRepositoryPort.createOne(loan);
+    }
+
+    @Override
+    public PageResponseDTO<LoanResponse> getAll(Long loanStateId, int page, int size) {
+        return this.loanRepositoryPort.getAll(loanStateId, page, size);
     }
 }
