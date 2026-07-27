@@ -15,20 +15,20 @@ public class UserEntity {
     private String id;
 
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @Column(nullable = false)
-    String lastname;
+    private String lastname;
 
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
 
     @Column(nullable = false)
-    String typeIdentification;
+    private String typeIdentification;
 
     @Column(nullable = false)
-    String identification;
+    private String identification;
 
     @Column(nullable = false)
-    Long baseSalary;
+    private Long baseSalary;
 }
