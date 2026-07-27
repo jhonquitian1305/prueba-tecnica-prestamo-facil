@@ -1,6 +1,6 @@
-package com.cotrafa.prueba_tecnica.domain.builder;
+package com.cotrafa.prueba_tecnica.domain.user.builder;
 
-import com.cotrafa.prueba_tecnica.domain.User;
+import com.cotrafa.prueba_tecnica.domain.user.User;
 
 public class UserBuilder {
 

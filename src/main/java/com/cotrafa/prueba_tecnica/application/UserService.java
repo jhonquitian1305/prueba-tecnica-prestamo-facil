@@ -1,9 +1,9 @@
 package com.cotrafa.prueba_tecnica.application;
 
 import com.cotrafa.prueba_tecnica.application.exception.DuplicateEmailException;
-import com.cotrafa.prueba_tecnica.domain.User;
-import com.cotrafa.prueba_tecnica.domain.ports.in.IUserService;
-import com.cotrafa.prueba_tecnica.domain.ports.out.UserRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.user.User;
+import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
+import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
 
 public class UserService implements IUserService {
 

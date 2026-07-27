@@ -1,7 +1,7 @@
 package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa;
 
-import com.cotrafa.prueba_tecnica.domain.User;
-import com.cotrafa.prueba_tecnica.domain.ports.out.UserRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.user.User;
+import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.mapper.UserMapperJpa;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.repository.UserJpaRepository;

@@ -1,4 +1,4 @@
-package com.cotrafa.prueba_tecnica.domain;
+package com.cotrafa.prueba_tecnica.domain.user;
 
 public class User {
     private String id;

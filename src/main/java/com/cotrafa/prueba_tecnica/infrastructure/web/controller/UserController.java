@@ -1,7 +1,7 @@
 package com.cotrafa.prueba_tecnica.infrastructure.web.controller;
 
-import com.cotrafa.prueba_tecnica.domain.User;
-import com.cotrafa.prueba_tecnica.domain.ports.in.IUserService;
+import com.cotrafa.prueba_tecnica.domain.user.User;
+import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
 import com.cotrafa.prueba_tecnica.infrastructure.web.controller.dto.UserDTO;
 import com.cotrafa.prueba_tecnica.infrastructure.web.controller.dto.UserResponse;
 import com.cotrafa.prueba_tecnica.infrastructure.web.controller.mapper.UserMapper;

@@ -1,7 +1,7 @@
 package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.mapper;
 
-import com.cotrafa.prueba_tecnica.domain.User;
-import com.cotrafa.prueba_tecnica.domain.builder.UserBuilder;
+import com.cotrafa.prueba_tecnica.domain.user.User;
+import com.cotrafa.prueba_tecnica.domain.user.builder.UserBuilder;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
 
 public class UserMapperJpa {
