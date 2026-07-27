@@ -26,4 +26,9 @@ public class UserJpaAdapter implements UserRepositoryPort {
     public boolean existsByEmail(String email) {
         return this.userJpaRepository.existsByEmail(email);
     }
+
+    @Override
+    public boolean existsById(String userId) {
+        return this.userJpaRepository.existsById(userId);
+    }
 }
