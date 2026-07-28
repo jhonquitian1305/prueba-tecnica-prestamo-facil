@@ -11,7 +11,9 @@ import com.cotrafa.prueba_tecnica.domain.loan.ports.in.ILoanService;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -23,13 +25,16 @@ public class LoanService implements ILoanService {
     private final LoanRepositoryPort loanRepositoryPort;
     private final LoanTypeRepositoryPort loanTypeRepositoryPort;
     private final LoanStateRepositoryPort loanStateRepositoryPort;
+    private final IPaymentPlanService paymentPlanService;
 
     public LoanService(UserRepositoryPort userRepositoryPort, LoanRepositoryPort loanRepositoryPort,
-                       LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort) {
+                       LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
+                       IPaymentPlanService paymentPlanService) {
         this.userRepositoryPort = userRepositoryPort;
         this.loanRepositoryPort = loanRepositoryPort;
         this.loanTypeRepositoryPort = loanTypeRepositoryPort;
         this.loanStateRepositoryPort = loanStateRepositoryPort;
+        this.paymentPlanService = paymentPlanService;
     }
 
     @Override
@@ -58,6 +63,7 @@ public class LoanService implements ILoanService {
     }
 
     @Override
+    @Transactional
     public void updateState(UpdateStateDTO updateStateDTO) {
         LoanInformationDTO loan = this.loanRepositoryPort.getById(updateStateDTO.idLoan())
                 .orElseThrow(() -> new NotFoundException("El tipo de préstamo no existe"));
@@ -65,8 +71,10 @@ public class LoanService implements ILoanService {
         if(updateStateDTO.idState().equals(LoanStateEnum.APROBADA.getId())){
             BigDecimal monthlyPayment = this.calculateMonthlyPayment(loan);
 
-            //TODO crear plan de pagos
+            this.paymentPlanService.generate(loan.id(), BigDecimal.valueOf(loan.amount()), loan.interestRate(), loan.termMonth(), monthlyPayment);
         }
+
+        this.loanRepositoryPort.update(updateStateDTO);
 
         //TODO enviar mensaje
     }

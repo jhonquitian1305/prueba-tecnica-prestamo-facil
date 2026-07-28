@@ -3,6 +3,7 @@ package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan;
 import com.cotrafa.prueba_tecnica.application.dto.LoanInformationDTO;
 import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
 import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
+import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan.entity.LoanEntity;
@@ -47,5 +48,10 @@ public class LoanJpaAdapter implements LoanRepositoryPort {
     @Override
     public Optional<LoanInformationDTO> getById(Long idLoan) {
         return this.loanJpaRepository.findById(idLoan).map(LoanMapperJpa::toInformationDTO);
+    }
+
+    @Override
+    public void update(UpdateStateDTO updateStateDTO) {
+        this.loanJpaRepository.update(updateStateDTO.idLoan(), updateStateDTO.idState());
     }
 }

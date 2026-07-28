@@ -2,6 +2,7 @@ package com.cotrafa.prueba_tecnica.infrastructure.web.controller.loan;
 
 import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
 import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
+import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.in.ILoanService;
 import com.cotrafa.prueba_tecnica.infrastructure.web.controller.dto.LoanDTO;
@@ -32,5 +33,11 @@ public class LoanController {
                                                                 @RequestParam(defaultValue = "0", required = false) Integer page,
                                                                 @RequestParam(defaultValue = "10", required = false) Integer size){
         return new ResponseEntity<>(this.loanService.getAll(loanStateId, page, size), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateState(@RequestBody UpdateStateDTO updateStateDTO){
+        this.loanService.updateState(updateStateDTO);
+        return new ResponseEntity<>("Estado actualizado con éxito", HttpStatus.OK);
     }
 }
