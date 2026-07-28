@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
+
 public interface LoanJpaRepository extends JpaRepository<LoanEntity, Long> {
 
     @Query("""
@@ -21,4 +23,11 @@ public interface LoanJpaRepository extends JpaRepository<LoanEntity, Long> {
         UPDATE loan l SET l.loanState.id = :idState WHERE l.id = :idLoan
     """)
     void update(Long idLoan, Long idState);
+
+    @Query("""
+        SELECT COALESCE(SUM(l.amount),0)
+        FROM loan l
+        WHERE l.loanState.id = 2
+    """)
+    BigDecimal getTotalApproved();
 }

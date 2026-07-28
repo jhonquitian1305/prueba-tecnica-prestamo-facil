@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
@@ -53,5 +54,10 @@ public class LoanJpaAdapter implements LoanRepositoryPort {
     @Override
     public void update(UpdateStateDTO updateStateDTO) {
         this.loanJpaRepository.update(updateStateDTO.idLoan(), updateStateDTO.idState());
+    }
+
+    @Override
+    public BigDecimal getTotalApproved() {
+        return this.loanJpaRepository.getTotalApproved();
     }
 }

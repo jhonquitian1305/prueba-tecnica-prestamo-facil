@@ -6,6 +6,7 @@ import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
 import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface LoanRepositoryPort {
@@ -15,4 +16,6 @@ public interface LoanRepositoryPort {
     Optional<LoanInformationDTO> getById(Long aLong);
 
     void update(UpdateStateDTO updateStateDTO);
+
+    BigDecimal getTotalApproved();
 }

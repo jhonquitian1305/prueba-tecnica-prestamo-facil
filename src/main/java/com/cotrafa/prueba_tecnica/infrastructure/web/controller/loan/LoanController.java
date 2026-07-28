@@ -14,6 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/v1/loans")
 @RequiredArgsConstructor
@@ -39,5 +43,13 @@ public class LoanController {
     public ResponseEntity<String> updateState(@RequestBody UpdateStateDTO updateStateDTO){
         this.loanService.updateState(updateStateDTO);
         return new ResponseEntity<>("Estado actualizado con éxito", HttpStatus.OK);
+    }
+
+    @GetMapping("total-approved")
+    public ResponseEntity<Map<String, BigDecimal>> getTotalApprovedLoans(){
+        BigDecimal totalApproved = this.loanService.getTotalApproved();
+        Map<String, BigDecimal> totalApprovedAmount = new HashMap<>();
+        totalApprovedAmount.put("totalApprovedAmount", totalApproved);
+        return new ResponseEntity<>(totalApprovedAmount, HttpStatus.OK);
     }
 }

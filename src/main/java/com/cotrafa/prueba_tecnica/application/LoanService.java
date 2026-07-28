@@ -84,6 +84,11 @@ public class LoanService implements ILoanService {
         this.notificationRepositoryPort.sendNotification(loan.emailUser(), approved);
     }
 
+    @Override
+    public BigDecimal getTotalApproved() {
+        return this.loanRepositoryPort.getTotalApproved();
+    }
+
     private BigDecimal calculateMonthlyPayment(LoanInformationDTO loan){
         // Redondear con 20
         MathContext mc = new MathContext(20, RoundingMode.HALF_EVEN);
