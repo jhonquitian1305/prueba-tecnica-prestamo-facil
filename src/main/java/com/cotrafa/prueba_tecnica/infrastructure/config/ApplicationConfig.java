@@ -6,6 +6,7 @@ import com.cotrafa.prueba_tecnica.application.UserService;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.loan.ports.out.NotificationRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.out.PaymentPlanRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
@@ -23,8 +24,9 @@ public class ApplicationConfig {
     @Bean
     public LoanService loanService(UserRepositoryPort userRepositoryPort, LoanRepositoryPort loanRepositoryPort,
                                    LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
-                                   IPaymentPlanService paymentPlanService){
-        return new LoanService(userRepositoryPort, loanRepositoryPort, loanTypeRepositoryPort, loanStateRepositoryPort, paymentPlanService);
+                                   IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort){
+        return new LoanService(userRepositoryPort, loanRepositoryPort, loanTypeRepositoryPort,
+                loanStateRepositoryPort, paymentPlanService, notificationRepositoryPort);
     }
 
     @Bean

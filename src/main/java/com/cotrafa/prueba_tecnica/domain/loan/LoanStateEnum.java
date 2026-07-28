@@ -6,8 +6,8 @@ public enum LoanStateEnum {
     REVISION_MANUAL(3L, "Revisión manual"),
     RECHAZADA(4L, "Rechazada");
 
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
 
     LoanStateEnum(Long id, String name) {
         this.id = id;

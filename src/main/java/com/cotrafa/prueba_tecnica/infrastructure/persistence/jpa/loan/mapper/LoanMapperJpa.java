@@ -37,6 +37,7 @@ public class LoanMapperJpa {
                 .amount(loanEntity.getAmount())
                 .interestRate(loanEntity.getLoanType().getInterestRate())
                 .termMonth(loanEntity.getTermMonths())
+                .emailUser(loanEntity.getUser().getEmail())
                 .build();
     }
 }

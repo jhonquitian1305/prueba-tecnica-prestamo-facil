@@ -9,6 +9,7 @@ public record LoanInformationDTO(
         Long id,
         Long amount,
         BigDecimal interestRate,
-        int termMonth
+        int termMonth,
+        String emailUser
 ) {
 }
