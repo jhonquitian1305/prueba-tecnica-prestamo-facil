@@ -32,6 +32,6 @@ public class LoanEntity {
     private LoanTypeEntity loanType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id", nullable = false)
+    @JoinColumn(name = "loan_state_id", nullable = false)
     private LoanStateEntity loanState;
 }
