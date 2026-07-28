@@ -18,7 +18,7 @@ public class UserMapperJpa {
 
     public static User toModel(UserEntity userEntity){
         return new UserBuilder.Builder()
-                .id(userEntity.getId())
+                .id(userEntity.getId().toString())
                 .name(userEntity.getName())
                 .lastname(userEntity.getLastname())
                 .email(userEntity.getEmail())
