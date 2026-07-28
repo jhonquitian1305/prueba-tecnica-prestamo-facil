@@ -13,7 +13,7 @@ import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.NotificationRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
-import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
@@ -22,17 +22,17 @@ import java.math.RoundingMode;
 
 public class LoanService implements ILoanService {
 
-    private final UserRepositoryPort userRepositoryPort;
+    private final IUserService userService;
     private final LoanRepositoryPort loanRepositoryPort;
     private final LoanTypeRepositoryPort loanTypeRepositoryPort;
     private final LoanStateRepositoryPort loanStateRepositoryPort;
     private final IPaymentPlanService paymentPlanService;
     private final NotificationRepositoryPort notificationRepositoryPort;
 
-    public LoanService(UserRepositoryPort userRepositoryPort, LoanRepositoryPort loanRepositoryPort,
+    public LoanService(IUserService userService, LoanRepositoryPort loanRepositoryPort,
                        LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
                        IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort) {
-        this.userRepositoryPort = userRepositoryPort;
+        this.userService = userService;
         this.loanRepositoryPort = loanRepositoryPort;
         this.loanTypeRepositoryPort = loanTypeRepositoryPort;
         this.loanStateRepositoryPort = loanStateRepositoryPort;
@@ -43,9 +43,8 @@ public class LoanService implements ILoanService {
     @Override
     public Loan createOne(Loan loan) {
         Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
-        if(!userRepositoryPort.existsById(loan.getUserId())){
-            throw new NotFoundException("El usuario no existe");
-        }
+
+        this.userService.validateUserById(loan.getUserId());
 
         if(!loanTypeRepositoryPort.existsById(loan.getIdLoanType())){
             throw new NotFoundException("El tipo de préstamo no existe");

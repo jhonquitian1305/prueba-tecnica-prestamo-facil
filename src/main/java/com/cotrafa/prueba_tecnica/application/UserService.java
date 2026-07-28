@@ -1,6 +1,7 @@
 package com.cotrafa.prueba_tecnica.application;
 
 import com.cotrafa.prueba_tecnica.application.exception.DuplicateEmailException;
+import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.user.User;
 import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
@@ -20,5 +21,12 @@ public class UserService implements IUserService {
             throw new DuplicateEmailException(user.getEmail());
         }
         return this.userRepositoryPort.saveOne(user);
+    }
+
+    @Override
+    public void validateUserById(String userId) {
+        if(!this.userRepositoryPort.existsById(userId)){
+            throw new NotFoundException("El usuario no existe");
+        }
     }
 }

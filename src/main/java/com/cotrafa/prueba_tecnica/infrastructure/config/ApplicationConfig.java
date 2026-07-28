@@ -9,6 +9,7 @@ import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.NotificationRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.out.PaymentPlanRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +23,10 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public LoanService loanService(UserRepositoryPort userRepositoryPort, LoanRepositoryPort loanRepositoryPort,
+    public LoanService loanService(IUserService userService, LoanRepositoryPort loanRepositoryPort,
                                    LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
                                    IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort){
-        return new LoanService(userRepositoryPort, loanRepositoryPort, loanTypeRepositoryPort,
+        return new LoanService(userService, loanRepositoryPort, loanTypeRepositoryPort,
                 loanStateRepositoryPort, paymentPlanService, notificationRepositoryPort);
     }
 
