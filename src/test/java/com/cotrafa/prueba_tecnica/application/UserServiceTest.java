@@ -1,5 +1,6 @@
 package com.cotrafa.prueba_tecnica.application;
 
+import com.cotrafa.prueba_tecnica.application.exception.DuplicateEmailException;
 import com.cotrafa.prueba_tecnica.domain.user.User;
 import com.cotrafa.prueba_tecnica.domain.user.builder.UserBuilder;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
@@ -10,11 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -53,6 +52,22 @@ public class UserServiceTest {
 
         verify(this.userRepositoryPort).existsByEmail(user.getEmail());
         verify(this.userRepositoryPort).saveOne(user);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEmailAlreadyExists() {
+
+        given(userRepositoryPort.existsByEmail(user.getEmail()))
+                .willReturn(true);
+
+        assertThrows(
+                DuplicateEmailException.class,
+                () -> userService.createOne(user)
+        );
+
+        verify(userRepositoryPort).existsByEmail(user.getEmail());
+        verify(userRepositoryPort, never())
+                .saveOne(any(User.class));
     }
 
 }
