@@ -1,4 +1,4 @@
-package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa;
+package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan;
 
 import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan.repository.LoanStateJpaRepository;
