@@ -14,7 +14,7 @@ public class LoanMapperJpa {
         return LoanEntity.builder()
                 .amount(loan.getAmount())
                 .termMonths(loan.getTermMonths())
-                .user(UserEntity.builder().id(loan.getUserId()).build())
+                .user(UserEntity.builder().id(Long.parseLong(loan.getUserId())).build())
                 .loanType(LoanTypeEntity.builder().id(loan.getIdLoanType()).build())
                 .loanState(LoanStateEntity.builder().id(loan.getIdLoanType()).build())
                 .build();
@@ -25,7 +25,7 @@ public class LoanMapperJpa {
                 .id(loanEntity.getId())
                 .amount(loanEntity.getAmount())
                 .termMonths(loanEntity.getTermMonths())
-                .userId(loanEntity.getUser().getId())
+                .userId(loanEntity.getUser().getId().toString())
                 .idLoanType(loanEntity.getLoanType().getId())
                 .idState(loanEntity.getLoanState().getId())
                 .build();

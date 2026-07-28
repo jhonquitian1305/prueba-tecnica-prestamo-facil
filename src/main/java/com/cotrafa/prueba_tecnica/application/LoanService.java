@@ -1,17 +1,12 @@
 package com.cotrafa.prueba_tecnica.application;
 
-import com.cotrafa.prueba_tecnica.application.dto.LoanInformationDTO;
-import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
-import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
-import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
+import com.cotrafa.prueba_tecnica.application.dto.*;
 import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.LoanStateEnum;
+import com.cotrafa.prueba_tecnica.domain.loan.LoanType;
 import com.cotrafa.prueba_tecnica.domain.loan.ports.in.ILoanService;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.NotificationRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.loan.ports.out.*;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
 import jakarta.transaction.Transactional;
@@ -28,35 +23,57 @@ public class LoanService implements ILoanService {
     private final LoanStateRepositoryPort loanStateRepositoryPort;
     private final IPaymentPlanService paymentPlanService;
     private final NotificationRepositoryPort notificationRepositoryPort;
+    private final LoanProcedureRepositoryPort loanProcedureRepositoryPort;
 
     public LoanService(IUserService userService, LoanRepositoryPort loanRepositoryPort,
                        LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
-                       IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort) {
+                       IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort,
+                       LoanProcedureRepositoryPort loanProcedureRepositoryPort) {
         this.userService = userService;
         this.loanRepositoryPort = loanRepositoryPort;
         this.loanTypeRepositoryPort = loanTypeRepositoryPort;
         this.loanStateRepositoryPort = loanStateRepositoryPort;
         this.paymentPlanService = paymentPlanService;
         this.notificationRepositoryPort = notificationRepositoryPort;
+        this.loanProcedureRepositoryPort = loanProcedureRepositoryPort;
     }
 
     @Override
+    @Transactional
     public Loan createOne(Loan loan) {
         Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
 
         this.userService.validateUserById(loan.getUserId());
 
-        if(!loanTypeRepositoryPort.existsById(loan.getIdLoanType())){
-            throw new NotFoundException("El tipo de préstamo no existe");
-        }
-
         if(!loanStateRepositoryPort.existsById(idState)){
-            throw new NotFoundException("Estado no existe");
+            throw new NotFoundException("El estado no existe");
         }
-
         loan.setIdState(idState);
 
-        return loanRepositoryPort.createOne(loan);
+        LoanType loanType = this.loanTypeRepositoryPort.findById(loan.getIdLoanType())
+                .orElseThrow(() -> new NotFoundException("El tipo de préstamo no existe"));
+
+        Loan loanSaved = this.loanRepositoryPort.createOne(loan);
+
+        if(loanType.isAutomaticValidation()){
+            LoanValidationResult loanValidationResult = this.loanProcedureRepositoryPort.evaluateAutomatic(loanSaved.getId());
+
+            loanSaved.setIdState(loanValidationResult.state());
+
+            boolean approved = loanValidationResult.state().equals(LoanStateEnum.APROBADA.getId());
+            if(approved){
+                this.paymentPlanService.generate(loanSaved.getId(), BigDecimal.valueOf(loanSaved.getAmount()), loanType.getInterestRate(), loan.getTermMonths(), loanValidationResult.monthlyPayment());
+            }
+
+            UpdateStateDTO updateStateDTO = UpdateStateDTO.builder()
+                    .idLoan(loanSaved.getId())
+                    .idState(loanValidationResult.state())
+                    .build();
+
+            this.loanRepositoryPort.update(updateStateDTO);
+        }
+
+        return loanSaved;
     }
 
     @Override

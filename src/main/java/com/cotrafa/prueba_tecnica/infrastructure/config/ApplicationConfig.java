@@ -3,10 +3,7 @@ package com.cotrafa.prueba_tecnica.infrastructure.config;
 import com.cotrafa.prueba_tecnica.application.LoanService;
 import com.cotrafa.prueba_tecnica.application.PaymentPlanService;
 import com.cotrafa.prueba_tecnica.application.UserService;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.NotificationRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.loan.ports.out.*;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.out.PaymentPlanRepositoryPort;
 import com.cotrafa.prueba_tecnica.domain.user.ports.in.IUserService;
@@ -25,9 +22,11 @@ public class ApplicationConfig {
     @Bean
     public LoanService loanService(IUserService userService, LoanRepositoryPort loanRepositoryPort,
                                    LoanTypeRepositoryPort loanTypeRepositoryPort, LoanStateRepositoryPort loanStateRepositoryPort,
-                                   IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort){
+                                   IPaymentPlanService paymentPlanService, NotificationRepositoryPort notificationRepositoryPort,
+                                   LoanProcedureRepositoryPort loanProcedureRepositoryPort){
         return new LoanService(userService, loanRepositoryPort, loanTypeRepositoryPort,
-                loanStateRepositoryPort, paymentPlanService, notificationRepositoryPort);
+                loanStateRepositoryPort, paymentPlanService, notificationRepositoryPort,
+                loanProcedureRepositoryPort);
     }
 
     @Bean
