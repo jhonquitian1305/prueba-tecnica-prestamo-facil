@@ -1,5 +1,6 @@
 package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan.mapper;
 
+import com.cotrafa.prueba_tecnica.application.dto.LoanInformationDTO;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.builder.LoanBuilder;
 import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
@@ -27,6 +28,15 @@ public class LoanMapperJpa {
                 .userId(loanEntity.getUser().getId())
                 .idLoanType(loanEntity.getLoanType().getId())
                 .idState(loanEntity.getLoanState().getId())
+                .build();
+    }
+
+    public static LoanInformationDTO toInformationDTO(LoanEntity loanEntity){
+        return LoanInformationDTO.builder()
+                .id(loanEntity.getId())
+                .amount(loanEntity.getAmount())
+                .interestRate(loanEntity.getLoanType().getInterestRate())
+                .termMonth(loanEntity.getTermMonths())
                 .build();
     }
 }
