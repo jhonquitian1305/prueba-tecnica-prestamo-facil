@@ -70,4 +70,15 @@ public class UserServiceTest {
                 .saveOne(any(User.class));
     }
 
+    @Test
+    void shouldValidateUserSuccessfully() {
+        String userId = "12345";
+        given(this.userRepositoryPort.existsById(userId))
+                .willReturn(true);
+
+        this.userService.validateUserById(userId);
+
+        verify(this.userRepositoryPort).existsById(userId);
+    }
+
 }
