@@ -23,4 +23,7 @@ public class LoanTypeEntity {
 
     @Column(nullable = false)
     private BigDecimal interestRate;
+
+    @Column(nullable = false)
+    private boolean automaticValidation;
 }

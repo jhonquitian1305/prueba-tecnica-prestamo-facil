@@ -10,6 +10,7 @@ public class LoanTypeBuilder {
         private Long id;
         private String name;
         private BigDecimal interestRate;
+        private boolean automaticValidation;
 
         public Builder id(Long id){
             this.id = id;
@@ -26,8 +27,13 @@ public class LoanTypeBuilder {
             return this;
         }
 
+        public Builder automaticValidation(boolean automaticValidation){
+            this.automaticValidation = automaticValidation;
+            return this;
+        }
+
         public LoanType build(){
-            return new LoanType(id, name, interestRate);
+            return new LoanType(id, name, interestRate, automaticValidation);
         }
     }
 }
