@@ -1,6 +1,6 @@
 package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.loan.entity;
 
-import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
+import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

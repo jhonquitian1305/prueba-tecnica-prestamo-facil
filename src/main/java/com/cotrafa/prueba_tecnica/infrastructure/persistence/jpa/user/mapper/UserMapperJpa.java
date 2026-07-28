@@ -1,8 +1,8 @@
-package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.mapper;
+package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.mapper;
 
 import com.cotrafa.prueba_tecnica.domain.user.User;
 import com.cotrafa.prueba_tecnica.domain.user.builder.UserBuilder;
-import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
+import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.entity.UserEntity;
 
 public class UserMapperJpa {
     public static UserEntity toEntity(User user){

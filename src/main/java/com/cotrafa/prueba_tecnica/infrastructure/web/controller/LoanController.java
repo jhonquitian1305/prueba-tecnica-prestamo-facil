@@ -1,4 +1,4 @@
-package com.cotrafa.prueba_tecnica.infrastructure.web.controller.loan;
+package com.cotrafa.prueba_tecnica.infrastructure.web.controller;
 
 import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
 import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;

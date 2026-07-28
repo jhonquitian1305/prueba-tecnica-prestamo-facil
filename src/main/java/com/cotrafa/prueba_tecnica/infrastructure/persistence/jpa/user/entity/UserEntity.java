@@ -1,4 +1,4 @@
-package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity;
+package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

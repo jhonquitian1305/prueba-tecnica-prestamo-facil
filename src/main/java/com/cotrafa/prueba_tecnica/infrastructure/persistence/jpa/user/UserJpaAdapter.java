@@ -1,10 +1,10 @@
-package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa;
+package com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user;
 
 import com.cotrafa.prueba_tecnica.domain.user.User;
 import com.cotrafa.prueba_tecnica.domain.user.ports.out.UserRepositoryPort;
-import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.entity.UserEntity;
-import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.mapper.UserMapperJpa;
-import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.repository.UserJpaRepository;
+import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.entity.UserEntity;
+import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.mapper.UserMapperJpa;
+import com.cotrafa.prueba_tecnica.infrastructure.persistence.jpa.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
