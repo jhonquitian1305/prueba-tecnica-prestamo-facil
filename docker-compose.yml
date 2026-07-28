@@ -1,4 +1,17 @@
 services:
+  app:
+    depends_on:
+      - db
+    container_name: prestamo-facil-app
+    image: prestamo-facil-app:1.0.0
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      NAME_DB: ${NAME_DB}
+      USER_DB: ${USER_DB}
+      PASSWORD_DB: ${PASSWORD_DB}
   db:
     container_name: ${NAME_DB}
     image: postgres:18.4-alpine
