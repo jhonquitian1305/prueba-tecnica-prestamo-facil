@@ -310,6 +310,34 @@ public class LoanServiceTest {
                 .sendNotification(loan.emailUser(), true);
     }
 
+    @Test
+    void shouldRejectLoan() {
+        UpdateStateDTO dto = UpdateStateDTO.builder()
+                .idLoan(1L)
+                .idState(LoanStateEnum.RECHAZADA.getId())
+                .build();
+
+        LoanInformationDTO loan = LoanInformationDTO.builder()
+                .id(1L)
+                .amount(1_000_000L)
+                .termMonth(12)
+                .emailUser("user@test.com")
+                .interestRate(BigDecimal.valueOf(0.1))
+                .build();
+
+        given(loanRepositoryPort.getById(dto.idLoan()))
+                .willReturn(Optional.of(loan));
+
+        loanService.updateState(dto);
+
+        verifyNoInteractions(paymentPlanService);
+
+        verify(loanRepositoryPort).update(dto);
+
+        verify(notificationRepositoryPort)
+                .sendNotification(loan.emailUser(), false);
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
