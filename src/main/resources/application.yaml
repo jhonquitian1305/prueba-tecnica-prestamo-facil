@@ -3,7 +3,7 @@ spring:
     name: prueba-tecnica
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/${NAME_DB}
+    url: jdbc:postgresql://${NAME_DB}:5432/${NAME_DB}
     username: ${USER_DB}
     password: ${PASSWORD_DB}
     driver-class-name: org.postgresql.Driver
@@ -18,3 +18,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+    operationsSorter: method
+    tagsSorter: alpha
+  api-docs:
+    path: /api-docs
