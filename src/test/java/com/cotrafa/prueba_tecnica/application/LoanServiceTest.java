@@ -161,6 +161,28 @@ public class LoanServiceTest {
         verify(loanRepositoryPort, never()).createOne(any());
     }
 
+    @Test
+    void shouldThrowExceptionWhenLoanTypeDoesNotExist() {
+        Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
+
+        given(loanStateRepositoryPort.existsById(idState))
+                .willReturn(true);
+
+        given(loanTypeRepositoryPort.findById(loan.getIdLoanType()))
+                .willReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> loanService.createOne(loan)
+        );
+
+        assertEquals("El tipo de préstamo no existe", exception.getMessage());
+
+        verify(loanRepositoryPort, never()).createOne(any());
+        verifyNoInteractions(loanProcedureRepositoryPort);
+        verifyNoInteractions(paymentPlanService);
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
