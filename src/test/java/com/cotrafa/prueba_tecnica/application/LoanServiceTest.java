@@ -1,5 +1,7 @@
 package com.cotrafa.prueba_tecnica.application;
 
+import com.cotrafa.prueba_tecnica.application.dto.LoanValidationResult;
+import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
 import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.LoanStateEnum;
@@ -71,7 +73,7 @@ public class LoanServiceTest {
 
         Loan loanSaved = this.createLoan();
 
-        LoanType loanType = this.createManualLoanType();
+        LoanType loanType = this.createLoanType(false);
 
         given(this.loanStateRepositoryPort.existsById(idState))
                 .willReturn(true);
@@ -95,6 +97,50 @@ public class LoanServiceTest {
         verify(this.loanRepositoryPort, never()).update(any());
     }
 
+    @Test
+    void shouldApproveLoanAutomatically() {
+        Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
+
+        LoanType loanType = this.createLoanType(true);
+
+        Loan loanSaved = this.createLoan();
+
+        LoanValidationResult validation =
+                new LoanValidationResult(
+                        LoanStateEnum.APROBADA.getId(),
+                        new BigDecimal("350000")
+                );
+
+        given(this.loanStateRepositoryPort.existsById(idState))
+                .willReturn(true);
+
+        given(this.loanTypeRepositoryPort.findById(loan.getIdLoanType()))
+                .willReturn(Optional.of(loanType));
+
+        given(this.loanRepositoryPort.createOne(any()))
+                .willReturn(loanSaved);
+
+        given(this.loanProcedureRepositoryPort.evaluateAutomatic(loanSaved.getId()))
+                .willReturn(validation);
+
+        this.loanService.createOne(loan);
+
+        verify(this.loanProcedureRepositoryPort)
+                .evaluateAutomatic(loanSaved.getId());
+
+        verify(this.paymentPlanService)
+                .generate(
+                        loanSaved.getId(),
+                        BigDecimal.valueOf(loanSaved.getAmount()),
+                        loanType.getInterestRate(),
+                        loan.getTermMonths(),
+                        validation.monthlyPayment()
+                );
+
+        verify(this.loanRepositoryPort)
+                .update(any(UpdateStateDTO.class));
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
@@ -105,10 +151,10 @@ public class LoanServiceTest {
                 .build();
     }
 
-    private LoanType createManualLoanType() {
+    private LoanType createLoanType(boolean isAutomaticValidation) {
         return new LoanTypeBuilder.Builder()
                 .id(1L)
-                .automaticValidation(false)
+                .automaticValidation(isAutomaticValidation)
                 .interestRate(new BigDecimal("0.13"))
                 .build();
     }
