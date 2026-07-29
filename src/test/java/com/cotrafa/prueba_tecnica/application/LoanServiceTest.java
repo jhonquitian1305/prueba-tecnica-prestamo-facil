@@ -1,6 +1,8 @@
 package com.cotrafa.prueba_tecnica.application;
 
+import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
 import com.cotrafa.prueba_tecnica.application.dto.LoanValidationResult;
+import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
 import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
 import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -247,6 +250,33 @@ public class LoanServiceTest {
         verifyNoInteractions(paymentPlanService);
 
         verify(loanRepositoryPort).update(any(UpdateStateDTO.class));
+    }
+
+    @Test
+    void shouldReturnLoansPage() {
+        Long loanStateId = 1L;
+        int page = 0;
+        int size = 10;
+
+        PageResponseDTO<LoanResponse> expectedResponse =
+                new PageResponseDTO<>(
+                        1,
+                        1,
+                        page,
+                        size,
+                        List.of()
+                );
+
+        given(loanRepositoryPort.getAll(loanStateId, page, size))
+                .willReturn(expectedResponse);
+
+        PageResponseDTO<LoanResponse> result =
+                loanService.getAll(loanStateId, page, size);
+
+        assertEquals(expectedResponse, result);
+
+        verify(loanRepositoryPort)
+                .getAll(loanStateId, page, size);
     }
 
     private Loan createLoan() {
