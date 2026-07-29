@@ -367,6 +367,20 @@ public class LoanServiceTest {
         verifyNoInteractions(notificationRepositoryPort);
     }
 
+    @Test
+    void shouldReturnTotalApprovedLoans() {
+        BigDecimal expectedTotal = new BigDecimal("15000000");
+
+        given(loanRepositoryPort.getTotalApproved())
+                .willReturn(expectedTotal);
+
+        BigDecimal result = loanService.getTotalApproved();
+
+        assertEquals(expectedTotal, result);
+
+        verify(loanRepositoryPort).getTotalApproved();
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
