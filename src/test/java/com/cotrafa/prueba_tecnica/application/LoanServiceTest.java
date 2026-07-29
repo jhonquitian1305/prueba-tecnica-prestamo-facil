@@ -338,6 +338,35 @@ public class LoanServiceTest {
                 .sendNotification(loan.emailUser(), false);
     }
 
+    @Test
+    void shouldThrowExceptionWhenLoanDoesNotExist() {
+        UpdateStateDTO dto = UpdateStateDTO.builder()
+                .idLoan(1L)
+                .idState(LoanStateEnum.APROBADA.getId())
+                .build();
+
+        given(loanRepositoryPort.getById(dto.idLoan()))
+                .willReturn(Optional.empty());
+
+        NotFoundException exception =
+                assertThrows(
+                        NotFoundException.class,
+                        () -> loanService.updateState(dto)
+                );
+
+        assertEquals(
+                "El tipo de préstamo no existe",
+                exception.getMessage()
+        );
+
+        verify(loanRepositoryPort, never())
+                .update(any());
+
+        verifyNoInteractions(paymentPlanService);
+
+        verifyNoInteractions(notificationRepositoryPort);
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
