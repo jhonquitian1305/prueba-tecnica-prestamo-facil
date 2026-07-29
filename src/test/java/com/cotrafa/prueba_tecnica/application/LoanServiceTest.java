@@ -1,19 +1,13 @@
 package com.cotrafa.prueba_tecnica.application;
 
-import com.cotrafa.prueba_tecnica.application.dto.LoanResponse;
-import com.cotrafa.prueba_tecnica.application.dto.LoanValidationResult;
-import com.cotrafa.prueba_tecnica.application.dto.PageResponseDTO;
-import com.cotrafa.prueba_tecnica.application.dto.UpdateStateDTO;
+import com.cotrafa.prueba_tecnica.application.dto.*;
 import com.cotrafa.prueba_tecnica.application.exception.NotFoundException;
 import com.cotrafa.prueba_tecnica.domain.loan.Loan;
 import com.cotrafa.prueba_tecnica.domain.loan.LoanStateEnum;
 import com.cotrafa.prueba_tecnica.domain.loan.LoanType;
 import com.cotrafa.prueba_tecnica.domain.loan.builder.LoanBuilder;
 import com.cotrafa.prueba_tecnica.domain.loan.builder.LoanTypeBuilder;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanProcedureRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanStateRepositoryPort;
-import com.cotrafa.prueba_tecnica.domain.loan.ports.out.LoanTypeRepositoryPort;
+import com.cotrafa.prueba_tecnica.domain.loan.ports.out.*;
 import com.cotrafa.prueba_tecnica.domain.payment_plan.port.in.IPaymentPlanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +46,9 @@ public class LoanServiceTest {
 
     @Mock
     private IPaymentPlanService paymentPlanService;
+
+    @Mock
+    private NotificationRepositoryPort notificationRepositoryPort;
 
     @InjectMocks
     private LoanService loanService;
@@ -277,6 +274,40 @@ public class LoanServiceTest {
 
         verify(loanRepositoryPort)
                 .getAll(loanStateId, page, size);
+    }
+
+    @Test()
+    void shouldApproveLoan() {
+        UpdateStateDTO dto = UpdateStateDTO.builder()
+                .idLoan(1L)
+                .idState(LoanStateEnum.APROBADA.getId())
+                .build();
+
+        LoanInformationDTO loan = LoanInformationDTO.builder()
+                .id(1L)
+                .amount(1_000_000L)
+                .termMonth(12)
+                .emailUser("user@test.com")
+                .interestRate(BigDecimal.valueOf(0.1))
+                .build();
+
+        given(loanRepositoryPort.getById(dto.idLoan()))
+                .willReturn(Optional.of(loan));
+
+        loanService.updateState(dto);
+
+        verify(paymentPlanService).generate(
+                eq(loan.id()),
+                eq(BigDecimal.valueOf(loan.amount())),
+                eq(loan.interestRate()),
+                eq(loan.termMonth()),
+                any(BigDecimal.class)
+        );
+
+        verify(loanRepositoryPort).update(dto);
+
+        verify(notificationRepositoryPort)
+                .sendNotification(loan.emailUser(), true);
     }
 
     private Loan createLoan() {
