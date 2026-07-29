@@ -141,6 +141,26 @@ public class LoanServiceTest {
                 .update(any(UpdateStateDTO.class));
     }
 
+    @Test
+    void shouldThrowExceptionWhenStateDoesNotExist() {
+        Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
+
+        given(loanStateRepositoryPort.existsById(idState))
+                .willReturn(false);
+
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> loanService.createOne(loan)
+        );
+
+        assertEquals("El estado no existe", exception.getMessage());
+
+        verify(userService).validateUserById(loan.getUserId());
+
+        verifyNoInteractions(loanTypeRepositoryPort);
+        verify(loanRepositoryPort, never()).createOne(any());
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
