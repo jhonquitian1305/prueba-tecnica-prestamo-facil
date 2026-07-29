@@ -216,6 +216,39 @@ public class LoanServiceTest {
         verify(loanRepositoryPort).update(any(UpdateStateDTO.class));
     }
 
+    @Test
+    void shouldRejectLoanAutomatically() {
+        Long idState = LoanStateEnum.PENDIENTE_REVISION.getId();
+
+        LoanType loanType = this.createLoanType(true);
+
+        Loan loanSaved = this.createLoan();
+
+        LoanValidationResult validation =
+                new LoanValidationResult(
+                        LoanStateEnum.RECHAZADA.getId(),
+                        new BigDecimal("350000")
+                );
+
+        given(loanStateRepositoryPort.existsById(idState))
+                .willReturn(true);
+
+        given(loanTypeRepositoryPort.findById(loan.getIdLoanType()))
+                .willReturn(Optional.of(loanType));
+
+        given(loanRepositoryPort.createOne(any()))
+                .willReturn(loanSaved);
+
+        given(loanProcedureRepositoryPort.evaluateAutomatic(loanSaved.getId()))
+                .willReturn(validation);
+
+        loanService.createOne(loan);
+
+        verifyNoInteractions(paymentPlanService);
+
+        verify(loanRepositoryPort).update(any(UpdateStateDTO.class));
+    }
+
     private Loan createLoan() {
         return new LoanBuilder.Builder()
                 .id(1L)
